@@ -1,6 +1,6 @@
 const axios = require('axios')
 const express = require('express')
-
+const cacheService = require("./cache-service");
 
 class ProxyServer {
     constructor(originUrl, port) {
@@ -13,12 +13,19 @@ class ProxyServer {
         const requestUrl = this.originUrl + req.originalUrl
         
         // check cache for url
+        const cachedData = await cacheService.get(requestUrl)
+        if(cachedData) {
+            res.set('X-Cache', 'HIT');
+            return res.status(200).json(cachedData)
+        }
         // not in cache make request and place in cache
         try {
             const result = await axios.get(requestUrl)
-            // console.log(result.data)
-            // res.send(result.data)
             res.set('X-Cache', 'MISS');
+            // setting to cache with 1 hr exp
+            await cacheService.set(requestUrl, JSON.stringify(result.data), {
+                EX: 3600,
+            });
             res.status(200).json(result.data)
         } catch(err) {
             console.error(err)

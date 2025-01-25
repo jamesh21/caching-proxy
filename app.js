@@ -1,3 +1,4 @@
+require("dotenv").config();
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const ProxyServer = require('./proxy-server')
