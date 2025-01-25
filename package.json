@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jamesh21/caching-proxy#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "yargs": "^17.7.2"
   }
 }
